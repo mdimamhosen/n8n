@@ -1,0 +1,503 @@
+{
+  "name": "FirstWorkflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Service Request Form",
+        "formDescription": "Please provide your details and the service you need",
+        "formFields": {
+          "values": [
+            {
+              "fieldName": "Name",
+              "fieldLabel": "Name",
+              "placeholder": "Name"
+            },
+            {
+              "fieldName": "Email",
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Email"
+            },
+            {
+              "fieldName": "Service",
+              "fieldLabel": "Service"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "77835a7f-573e-4bc9-9e7b-59edc631b1aa",
+      "name": "Webhook (Form Submit)",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.4,
+      "position": [
+        432,
+        1312
+      ],
+      "webhookId": "3c2471e6-12ef-468a-97d1-e36cba4ed155"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E",
+          "mode": "list",
+          "cachedResultName": "N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Service": "={{ $json.Service }}",
+            "Time": "={{ $json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1150ccc5-7408-41f6-8681-c9a0b59263ae",
+      "name": "Google Sheets - Append Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        1312
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3zScfTlx6jmAzPip",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.agify.io/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.Name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "551f12a6-a8e8-4b70-b638-250ab080b879",
+      "name": "HTTP Request - Agify API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        800,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.nationalize.io/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.Name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "943ecf5f-a67b-470c-9a53-a01ed7dc5305",
+      "name": "HTTP Request - Nationalize API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        800,
+        1440
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "8824adcf-5fce-4d71-b804-b25da00c7fb1",
+      "name": "Merge API Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        992,
+        1328
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E",
+          "mode": "list",
+          "cachedResultName": "N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZznLxW2qdI4XWafFAb53PCdGXYLjdWj8SsmlhBcnd3E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "age": "={{ $json.age }}",
+            "Service": "={{ $('Google Sheets - Append Row').item.json.Service }}",
+            "Time": "={{ $('Webhook (Form Submit)').item.json.submittedAt }}",
+            "Email": "={{ $('Webhook (Form Submit)').item.json.Email }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "age",
+              "displayName": "age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nationality",
+              "displayName": "Nationality",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b476b4f1-5761-490f-9e14-f9f820b085ec",
+      "name": "Google Sheets - Update Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1152,
+        1328
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "L4qfaeiOB2uQ3iw7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Create a professional email using the following details: Name: {{ $json.Name }}, Email: {{ $json.Email }}, Service: {{ $json.Service }}, Age: {{ $json.age }}. Return ONLY a JSON object with two fields: 'subject' (the email subject line) and 'body' (the HTML email body). Do not include any other text or formatting outside the JSON."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "cc234d14-89c8-48ef-a4a5-a3435f42a29b",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        1328
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "GwglLbr3Y0SB90Pw",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.toEmail }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "f7da00f2-5a5d-4277-8835-affca412fea7",
+      "name": "Gmail - Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1792,
+        1328
+      ],
+      "webhookId": "ab91ac89-2131-4e82-b053-549cdfa06358",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WoZJHeKRd7xQn7AB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "emailData",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "parsedEmail",
+              "value": "={{ JSON.parse($json.output[0].content[0].text) }}",
+              "type": "object"
+            },
+            {
+              "id": "id-3",
+              "name": "subject",
+              "value": "={{ JSON.parse($json.output[0].content[0].text).subject }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "body",
+              "value": "={{ JSON.parse($json.output[0].content[0].text).body_html }}",
+              "type": "string"
+            },
+            {
+              "id": "id-5",
+              "name": "toEmail",
+              "value": "={{ $('Webhook (Form Submit)').item.json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea675cf6-59c7-45d9-84aa-421085329b7d",
+      "name": "Extract Subject and Body",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1616,
+        1328
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (Form Submit)": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Append Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Append Row": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Agify API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request - Nationalize API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Agify API": {
+      "main": [
+        [
+          {
+            "node": "Merge API Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Nationalize API": {
+      "main": [
+        [
+          {
+            "node": "Merge API Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge API Results": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Update Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Update Row": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "main": [
+        [
+          {
+            "node": "Extract Subject and Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Subject and Body": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "4e8dbd9f-2aea-4f8b-aab6-c465be9ebfcc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8852114f42ffb29ecd947012aeecefffc40de157e6da89b559b622b9664ce237"
+  },
+  "id": "8PDNULM1hnsASz86",
+  "tags": []
+}
