@@ -1,0 +1,212 @@
+{
+  "name": "agen_1",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        1296,
+        416
+      ],
+      "id": "152787f9-8281-4c82-b373-14d2e5a0e100",
+      "name": "When chat message received",
+      "webhookId": "96ca9047-d6cf-422b-b9ee-083440185c8c"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant that manages Google Tasks. You can create new tasks and retrieve all existing tasks for the user. When the user asks for their tasks, use the appropriate tool to fetch them."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1704,
+        416
+      ],
+      "id": "1d7fa425-0763-4a67-a744-e55e654fddcb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        640
+      ],
+      "id": "ef8fec5c-d852-4bf8-84f9-242645fba994",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GwglLbr3Y0SB90Pw",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"response\": \"string\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2032,
+        640
+      ],
+      "id": "17c6feb2-2585-4344-b881-cc9c0b9e6dbe",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1648,
+        640
+      ],
+      "id": "6dd5da39-dba0-4ca9-a476-7a07e8e48fbe",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "task": "MDI3MTYwOTYyODE4NDkwNzk5Njc6MDow",
+        "title": "={{ $fromAI('title', 'The title of the task to create', 'string') }}",
+        "additionalFields": {
+          "dueDate": "={{ $fromAI('due', 'The due date for the task in ISO format if provided', 'string', '') }}",
+          "notes": "={{ $fromAI('notes', 'Additional notes or description for the task', 'string', '') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleTasksTool",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        720
+      ],
+      "id": "1cba950c-a646-47f5-a7cd-a2a892cb0a2b",
+      "name": "Create a task in Google Tasks",
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "skhP28NAtqbEdFg5",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "task": "MDI3MTYwOTYyODE4NDkwNzk5Njc6MDow",
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "id": "62cc3b88-fa13-4253-abd3-196d9eef4ce0",
+      "name": "Get all tasks from Google Tasks",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        640
+      ],
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "skhP28NAtqbEdFg5",
+          "name": "Google Tasks account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a task in Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all tasks from Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "6344eb35-f4ec-4679-941b-896abcbd0ff8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8852114f42ffb29ecd947012aeecefffc40de157e6da89b559b622b9664ce237"
+  },
+  "id": "d5KaOaGA9TBsBWKw",
+  "tags": []
+}
